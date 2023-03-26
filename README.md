@@ -1,6 +1,6 @@
 # Bürgeramt appointment finder
 
-This server looks for Bürgeramt appointment every few seconds, and broadcasts the results via websockets. This is the code behind All About Berlin's [Bürgeramt appointment finder](https://allaboutberlin.com/tools/appointment-finder)
+See original repo [here](https://github.com/nicbou/burgeramt-appointments-websockets).
 
 ## Setup
 
