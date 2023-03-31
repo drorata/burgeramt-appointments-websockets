@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+TOKEN = os.environ["BOOKING_PUSHBULLET_API_TOKEN"]
+
 logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
@@ -52,7 +54,7 @@ appointments_url = (
     "327330,122311,327334,122309,327332,317869,122281,327352,122279,329772,"
     "122283,122276,327324,122274,327326,122267,329766,122246,327318,122251,"
     "327320,122257,327322,122208,327298,122226,327300"
-    f"&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F{'BOOKING_ANLIEGEN'}%2F"
+    f"&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F{os.environ['BOOKING_ANLIEGEN']}%2F"
 )
 delay = 180  # Minimum allowed by Berlin.de's IKT-ZMS team.
 
@@ -130,6 +132,22 @@ def look_for_appointments():
         logger.info(
             f"Found {len(appointments)} appointments: {[datetime_to_json(d) for d in appointments]}"
         )
+        headers = {
+            "Access-Token": TOKEN,
+            "Content-Type": "application/json",
+        }
+        for appointment in appointments:
+            appointment_json = datetime_to_json(appointment)
+            logger.info(f"Sending the appointment: {appointment_json}")
+            json_data = {
+                "type": "link",
+                "title": f"Optional appointment at {appointment_json}",
+                "link": appointments_url,
+            }
+            requests.post(
+                "https://api.pushbullet.com/v2/pushes", headers=headers, json=json_data
+            )
+
         return {
             "time": datetime_to_json(datetime.now()),
             "status": 200,

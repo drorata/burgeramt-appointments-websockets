@@ -6,16 +6,12 @@ See original repo [here](https://github.com/nicbou/burgeramt-appointments-websoc
 
 ### Standalone
 
-1. Set the required environment variables:
-    ```
-    export BOOKING_TOOL_EMAIL=your@email.com
-    export BOOKING_TOOL_ID=johnsmith-dev
-    ```
+1. Set the required environment variables. You can do this by creating `.env` file based on [`example.env`](./example.env).
 
 2. Run the appointment booking tool
     ```
-    pip install -r requirements.txt
-    python3 appointments.py
+    poetry install --no-root
+    poetry run python appointments.py
     ```
 
 The tool outputs the appointments it finds and the errors to the console, and broadcasts them with websockets.
