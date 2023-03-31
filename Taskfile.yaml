@@ -1,0 +1,23 @@
+version: "3"
+
+vars:
+  REQUIREMENTS: requirements.txt
+
+tasks:
+  export_requirements:
+    cmds:
+      - poetry export -f requirements.txt --output {{.REQUIREMENTS}}
+
+  rm_requirements:
+    cmds:
+      - rm -f {{.REQUIREMENTS}}
+
+  build_docker:
+    cmds:
+      - task: export_requirements
+      - docker build -t buergeramt-appointments .
+      - task: rm_requirements
+
+  run_docker:
+    cmds:
+      - docker run --rm -it --mount type=bind,source=${PWD}/.env,target=/.env buergeramt-appointments
